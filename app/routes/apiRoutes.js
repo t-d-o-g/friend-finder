@@ -1,4 +1,4 @@
-const surveyData = require('../data/surveyData');
+const friends = require('../data/friends');
 
 module.exports = app => {
     app.get('/api/friends', (req, res) => {
