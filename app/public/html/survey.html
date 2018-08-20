@@ -29,8 +29,6 @@
 
                 <div class="questions mt-5 bg-info">
                     <ul class="list-group">
-                        <li class="list-group-item m-3">Question 1</li>
-                        <li class="list-group-item m-3">Question 2</li>
                     </ul>
                 </div>
 
@@ -47,4 +45,26 @@
         <script src="public/js/jquery.min.js"></script>
         <script src="public/js/bootstrap.min.js"></script>
     </body>
+
+    <script type="text/javascript">
+
+        surveyQuery = () => {
+            const currentUrl = window.location.origin;
+
+            $.ajax({ url: `${currentUrl}/api/survey`, method: 'GET' })
+                .then(surveyData => {
+                    console.log(surveyData);
+                    for (let i = 0; i < surveyData.length; i++) {
+                        let question = $('<li>');
+                        question.addClass('list-group-item m-3')
+                        question.text(surveyData[i]['question']);
+                        $('.list-group').append(question);
+                    }
+                });
+
+        }
+
+        surveyQuery();
+
+    </script>
 </html>
