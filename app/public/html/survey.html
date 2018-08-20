@@ -10,10 +10,12 @@
     </head>
 
     <body>
-        <nav class="navbar">
-            <a class="nav-link text-left" href="/">Home</a>
-            <h1 class="m-auto">Survey</h1>
-        </nav>
+        <header>
+            <div class="navbar">
+                <a class="nav-link" href="/">Home</a>
+                <h1 id="heading">Survey</h1>
+            </div class="navbar">
+        </header>
 
         <div class="container mt-5">
             <form>
@@ -37,7 +39,7 @@
         </div> 
         
         <footer>
-            <div class="footer fixed-bottom text-center">
+            <div class="footer navbar-fixed-bottom text-center">
                 <small>2018</small>
             </div>
         </footer>
@@ -47,7 +49,6 @@
     </body>
 
     <script type="text/javascript">
-
         surveyQuery = () => {
             const currentUrl = window.location.origin;
 
@@ -74,7 +75,7 @@
                         card.addClass('card card-body');
                         answersDiv.append(card);
 
-                        let answers = ['Stongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'];
+                        let answers = ['Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'];
                         for (let j = 0; j < 5; j++) {
                             let formCheck = $('<div>');
                             formCheck.addClass('form-check');
@@ -82,7 +83,7 @@
                          
                             let input = $('<input>');
                             input.addClass('form-check-input')
-                            input.attr({'type': 'radio', 'name': 'radios', 'id': `radio-${j}`, 'value': `option-${i}-${j}`});
+                            input.attr({'type': 'radio', 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `option-${i}-${j}`});
                             formCheck.append(input);
 
                             let label = $('<label>');
@@ -96,8 +97,6 @@
                     }
                 });
         }
-
         surveyQuery();
-
     </script>
 </html>

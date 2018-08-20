@@ -3,3 +3,16 @@ $bg-gray: #e9ecef;
 .navbar {
     background-color: $bg-gray;
 }
+
+#heading {
+    position: absolute;
+    right: 35%;
+}
+
+// Small devices (landscape phones, 300px and up)
+@media (min-width: 600px) {
+    #heading {
+        position: absolute;
+        right: 45%;
+    }
+}
