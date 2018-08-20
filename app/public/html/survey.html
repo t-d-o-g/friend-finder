@@ -56,12 +56,45 @@
                     console.log(surveyData);
                     for (let i = 0; i < surveyData.length; i++) {
                         let question = $('<li>');
-                        question.addClass('list-group-item m-3')
+                        question.addClass('list-group-item m-3');
                         question.text(surveyData[i]['question']);
+
+                        let answersLink = $('<a>');
+                        answersLink.attr({'data-toggle': 'collapse', 'href': `#collapsableItem-${i}`});
+                        answersLink.addClass('btn btn-link');
+                        answersLink.text('Answer');
+                        question.append(answersLink);
+
+                        let answersDiv = $('<div>');
+                        answersDiv.addClass('collapse');
+                        answersDiv.attr('id', `collapsableItem-${i}`);
+                        question.append(answersDiv);
+
+                        let card = $('<div>');
+                        card.addClass('card card-body');
+                        answersDiv.append(card);
+
+                        let answers = ['Stongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'];
+                        for (let j = 0; j < 5; j++) {
+                            let formCheck = $('<div>');
+                            formCheck.addClass('form-check');
+                            card.append(formCheck);
+                         
+                            let input = $('<input>');
+                            input.addClass('form-check-input')
+                            input.attr({'type': 'radio', 'name': 'radios', 'id': `radio-${j}`, 'value': `option-${i}-${j}`});
+                            formCheck.append(input);
+
+                            let label = $('<label>');
+                            label.addClass('form-check-label');
+                            label.attr('for', `radio-${j}`);
+                            label.text(answers[j]);
+                            formCheck.append(label);
+                        }
+
                         $('.list-group').append(question);
                     }
                 });
-
         }
 
         surveyQuery();
