@@ -34,7 +34,7 @@
                     </ul>
                 </div>
                 
-                <!-- Modal -->
+                <!-- Modal-->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -95,15 +95,16 @@
                         card.addClass('card card-body');
                         answersDiv.append(card);
 
-                        let answers = ['Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'];
-                        for (let j = 0; j < 5; j++) {
+                        let answers = ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
+                        for (let j = 4; j >= 0; j--) {
                             let formCheck = $('<div>');
                             formCheck.addClass('form-check');
                             card.append(formCheck);
                          
                             let input = $('<input>');
                             input.addClass('form-check-input')
-                            input.attr({'type': 'radio', 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `option-${j}`});
+                            let score= j-2;
+                            input.attr({'type': 'radio', 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `${surveyData[i]['factor']}_${surveyData[i]['key']}_${score}`});
                             formCheck.append(input);
 
                             let label = $('<label>');
@@ -123,9 +124,10 @@
             event.preventDefault();
             let responses = [];
 
-            for (let i = 0; i < 9; i++) {
+            for (let i = 0; i < 10; i++) {
                 responses.push($(`input[name=radioGroup-${i}]:checked`).val());
             }
+            console.log(responses);
 
             let friend = {
                 friendName: $("#name").val().trim(),
