@@ -34,7 +34,7 @@
                     </ul>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-5">Submit</button>
+                <button type="submit" id="submit" class="btn btn-primary mt-5">Submit</button>
             </form>
         </div> 
         
@@ -83,7 +83,7 @@
                          
                             let input = $('<input>');
                             input.addClass('form-check-input')
-                            input.attr({'type': 'radio', 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `option-${i}-${j}`});
+                            input.attr({'type': 'radio', 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `option-${j}`});
                             formCheck.append(input);
 
                             let label = $('<label>');
@@ -98,5 +98,24 @@
                 });
         }
         surveyQuery();
+
+        $("#submit").on("click", event => {
+            event.preventDefault();
+            let responses = [];
+
+            for (let i = 0; i < 9; i++) {
+                responses.push($(`input[name=radioGroup-${i}]:checked`).val());
+
+
+            }
+
+            let user = {
+                userName: $("#name").val().trim(),
+                userImg: $("#image").val().trim(),
+                userResponses: responses 
+            }
+
+            console.log(user);
+        });
     </script>
 </html>

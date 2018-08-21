@@ -7,7 +7,7 @@ module.exports = app => {
     });
 
     app.post('/api/friends', (req, res) => {
-        res.json('post post');
+        friends.push(req.body);
     });
 
     app.get('/api/survey', (req, res) => {
