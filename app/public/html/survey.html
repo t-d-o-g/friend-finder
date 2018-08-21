@@ -105,17 +105,20 @@
 
             for (let i = 0; i < 9; i++) {
                 responses.push($(`input[name=radioGroup-${i}]:checked`).val());
-
-
             }
 
-            let user = {
-                userName: $("#name").val().trim(),
-                userImg: $("#image").val().trim(),
-                userResponses: responses 
+            let friend = {
+                friendName: $("#name").val().trim(),
+                friendImg: $("#image").val().trim(),
+                friendResponses: responses 
             }
 
-            console.log(user);
+            console.log(friend);
+
+            $.post("/api/friends", friend,
+                data => {
+                    console.log(data);
+                });
         });
     </script>
 </html>
