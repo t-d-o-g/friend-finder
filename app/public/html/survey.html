@@ -27,7 +27,8 @@
 
                 <div class="form-group">
                     <label for="image">Image</label>
-                    <input type="text" class="form-control" id="image" placeholder="Link to image">
+                    <input type="text" class="form-control" id="image" placeholder="Link to image" required>
+                    <div class="invalid-feedback">Image required</div>
                 </div>
 
                 <div class="questions mt-5 bg-info">
@@ -94,7 +95,7 @@
                             for (let i = 0; i < 10; i++) {
                                 if ($(`input[name=radioGroup-${i}]:checked`).val()) {
                                     let input = $(`input[name=radioGroup-${i}]:checked`).val().split('_'); 
-                                    console.log(input);
+                                    // console.log(input);
 
                                     if (input[1] === 'positive') {
                                         factorScores[input[0]] += parseInt(input[2]); 
@@ -103,20 +104,45 @@
                                     }
                                 }
                             }
-                            console.log(factorScores);
+                            // console.log(factorScores);
 
-                            let friend = {
-                                name: $("#name").val().trim(),
-                                img: $("#image").val().trim(),
-                                factors: factorScores 
-                            }
+                            $.get('/api/friends')
+                                .then(friendData => {
+                                    let newId = friendData.length;
+                                    let friend = {
+                                        id: newId, 
+                                        name: $("#name").val().trim(),
+                                        img: $("#image").val().trim(),
+                                        factors: factorScores 
+                                    }
+                                    console.log('friend', friend);
+                                    // Compare newFriend Factor score to existingFriends scores
+                                    let factorsDiff = [];
+                                    let diff = 0;
+                                    let existingFriendFactor = 0;
+                                    let currentFriendFactor = 0;
+                                    for (let i = 0; i < friendData.length; i++) {
+                                        for (let property in friendData[i].factors) {
+                                            // existing friend factors
+                                            existingFriendFactor = friendData[i].factors[property];
+                                            // current friend factors
+                                            currentFriendFactor = friend.factors[property];
+                                            let diff = existingFriendFactor - currentFriendFactor;
+                                            console.log(diff);
 
-                            $.post("/api/friends", friend,
-                                data => {
-                                    console.log(data);
-                            });
 
-                            $('#friend-modal').modal('show');
+                                        }
+                                    }
+
+                                    console.log(factorsDiff);
+
+                                    $.post('/api/friends', friend,
+                                        data => {
+                                    });
+
+
+                                    $('#friend-modal').modal('show');
+                                });
                         }
                         form.classList.add('was-validated');
                     }, false);
@@ -125,11 +151,9 @@
         })();
 
         surveyQuery = () => {
-            const currentUrl = window.location.origin;
-
-            $.ajax({ url: `${currentUrl}/api/survey`, method: 'GET' })
+            $.get('/api/survey')
                 .then(surveyData => {
-                    console.log(surveyData);
+                    // console.log(surveyData);
                     for (let i = 0; i < surveyData.length; i++) {
                         let question = $('<li>');
                         question.addClass('list-group-item m-3');

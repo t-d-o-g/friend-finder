@@ -1,5 +1,5 @@
 const friends = require('../data/friends');
-const survey = require('../public/js/survey');
+const survey = require('../public/js/surveyController');
 
 module.exports = app => {
     app.get('/api/friends', (req, res) => {
@@ -7,7 +7,23 @@ module.exports = app => {
     });
 
     app.post('/api/friends', (req, res) => {
-        friends.push(req.body);
+        const parsedData = JSON.stringify({
+            id: parseInt(req.body.id),
+            name: req.body.name,
+            img: req.body.img,
+            factors: {
+                neuroticism: parseInt(req.body.factors.neuroticism),
+                extraversion: parseInt(req.body.factors.extraversion),
+                openness: parseInt(req.body.factors.openness),
+                agreeableness: parseInt(req.body.factors.agreeableness),
+                conscientiousness: parseInt(req.body.factors.conscientiousness)
+            } 
+        });
+
+        const unparsedData = JSON.parse(parsedData);
+        console.log(unparsedData);
+        // friends.push(req.body);
+        friends.push(unparsedData);
     });
 
     app.get('/api/survey', (req, res) => {
