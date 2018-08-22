@@ -18,10 +18,11 @@
         </header>
 
         <div class="container mt-5">
-            <form>
+            <form class="needs-validation" data-toggle="modal" novalidate>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter name">
+                    <input type="text" class="form-control" id="name" placeholder="Enter name" required>
+                    <div class="invalid-feedback">Name required</div>
                 </div>
 
                 <div class="form-group">
@@ -35,7 +36,7 @@
                 </div>
                 
                 <!-- Modal-->
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal fade" id="friend-modal" tabindex="-1" role="dialog" aria-labelledby="friend-modal-title" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -54,7 +55,7 @@
                     </div>
                 </div>
 
-                <button type="submit" id="submit" class="btn btn-primary mt-5" data-toggle="modal" data-target="#exampleModalCenter">Submit</button>
+                <button type="submit" class="btn btn-primary mt-5">Submit</button>
             </form>
         </div> 
         
@@ -69,6 +70,60 @@
     </body>
 
     <script type="text/javascript">
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                const forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                const validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } else {
+                            let factorScores = {
+                                "neuroticism": 0,
+                                "extraversion": 0,
+                                "openness": 0,
+                                "agreeableness": 0,
+                                "conscientiousness": 0
+                            }
+
+                            for (let i = 0; i < 10; i++) {
+                                if ($(`input[name=radioGroup-${i}]:checked`).val()) {
+                                    let input = $(`input[name=radioGroup-${i}]:checked`).val().split('_'); 
+                                    console.log(input);
+
+                                    if (input[1] === 'positive') {
+                                        factorScores[input[0]] += parseInt(input[2]); 
+                                    } else {
+                                        factorScores[input[0]] += parseInt(-(input[2])); 
+                                    }
+                                }
+                            }
+                            console.log(factorScores);
+
+                            let friend = {
+                                name: $("#name").val().trim(),
+                                img: $("#image").val().trim(),
+                                factors: factorScores 
+                            }
+
+                            $.post("/api/friends", friend,
+                                data => {
+                                    console.log(data);
+                            });
+
+                            $('#friend-modal').modal('show');
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
         surveyQuery = () => {
             const currentUrl = window.location.origin;
 
@@ -97,14 +152,14 @@
 
                         let answers = ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
                         for (let j = 4; j >= 0; j--) {
-                            let formCheck = $('<div>');
+                            var formCheck = $('<div>');
                             formCheck.addClass('form-check');
                             card.append(formCheck);
                          
                             let input = $('<input>');
                             input.addClass('form-check-input')
                             let score= j-2;
-                            input.attr({'type': 'radio', 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `${surveyData[i]['factor']}_${surveyData[i]['key']}_${score}`});
+                            input.attr({'type': 'radio', 'required': true, 'name': `radioGroup-${i}`, 'id': `radio-${j}`, 'value': `${surveyData[i]['factor']}_${surveyData[i]['key']}_${score}`});
                             formCheck.append(input);
 
                             let label = $('<label>');
@@ -114,47 +169,16 @@
                             formCheck.append(label);
                         }
 
+                        let required = $('<div>');
+                        required.addClass('invalid-feedback');
+                        required.text('Answer required');
+                        formCheck.append(required);
+
                         $('.list-group').append(question);
                     }
                 });
         }
         surveyQuery();
-
-        $("#submit").on("click", event => {
-            event.preventDefault();
-            let scores = {};
-
-            // STILL INCOMPLETE: Need to crate this obj in loop and match with existing friend to display in modal
-            /*
-            "scores": {
-                "neuroticism": 0,
-                "extraversion": 0,
-                "openness": 0,
-                "aggreableness": 0,
-                "concientiousness": 0
-            }
-            */
-
-            for (let i = 0; i < 10; i++) {
-                responses.push($(`input[name=radioGroup-${i}]:checked`).val());
-            }
-            console.log(responses);
-
-            let friend = {
-                friendName: $("#name").val().trim(),
-                friendImg: $("#image").val().trim(),
-                friendScore: scores 
-            }
-
-            console.log(friend);
-
-            $.post("/api/friends", friend,
-                data => {
-                    console.log(data);
-            });
-            
-                $("#myModal").modal();
-        });
 
     </script>
 </html>

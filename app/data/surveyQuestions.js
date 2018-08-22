@@ -31,7 +31,7 @@ const surveyQuestions = {
             "Get back at others.", "Insult people."
         ]
     },
-    "concientiousness": {
+    "conscientiousness": {
         "positive": ["Am always prepared.", "Pay attention to details.", "Get chores done right away.",
             "Carry out my plans.", "Make plans and stick to them."
         ],
