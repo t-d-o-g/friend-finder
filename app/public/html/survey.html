@@ -95,7 +95,7 @@
                             for (let i = 0; i < 10; i++) {
                                 if ($(`input[name=radioGroup-${i}]:checked`).val()) {
                                     let input = $(`input[name=radioGroup-${i}]:checked`).val().split('_'); 
-                                    // console.log(input);
+                                    console.log(input);
 
                                     if (input[1] === 'positive') {
                                         factorScores[input[0]] += parseInt(input[2]); 
@@ -117,38 +117,56 @@
                                     }
                                     console.log('friend', friend);
                                     // Compare newFriend Factor score to existingFriends scores
-                                    let factorsDiff = [];
                                     let diff = 0;
                                     let existingFriendFactor = 0;
                                     let currentFriendFactor = 0;
+                                    let factorDiffs = []; 
+                                    let diffArr = [];
+                                    // loop through each object in existing friends
                                     for (let i = 0; i < friendData.length; i++) {
+                                        factorDiffs = [];
+                                        // loop through each property in current friend
                                         for (let property in friendData[i].factors) {
                                             // existing friend factors
                                             existingFriendFactor = friendData[i].factors[property];
                                             // current friend factors
                                             currentFriendFactor = friend.factors[property];
-                                            let diff = existingFriendFactor - currentFriendFactor;
-                                            console.log(diff);
-
-
+                                            // let diff = existingFriendFactor - currentFriendFactor;
+                                            if (existingFriendFactor > currentFriendFactor) {
+                                                diff = existingFriendFactor - currentFriendFactor;
+                                            } else {
+                                                diff = currentFriendFactor - existingFriendFactor;
+                                            }
+                                            factorDiffs.push(diff);
+                                            console.log('diff', diff);
+                                            console.log('factorsDiff', factorDiffs);
+                                            for (var u = 0; u < factorDiffs.length; u++) {
+                                                console.log(`factor diffs ${u}: ${factorDiffs[u]}`);
+                                            }
+                                        }
+                                        diffArr.push(factorDiffs);
+                                        console.log('diffArr', diffArr);
+                                        console.log('diffArr length', diffArr.length);
+                                        for (var p = 0; p < diffArr.length; p++) {
+                                            console.log(`diff arr ${p}: ${diffArr[p]}`);
                                         }
                                     }
 
-                                    console.log(factorsDiff);
-
-                                    $.post('/api/friends', friend,
-                                        data => {
+                                    $.post('/api/friends', friend, data => {
+                                        // does not ever return
+                                        console.log(data);
+                                        return data;
                                     });
 
-
+                                    // display modal after form submitted 
                                     $('#friend-modal').modal('show');
-                                });
-                        }
+                                })
+                            }
                         form.classList.add('was-validated');
                     }, false);
                 });
             }, false);
-        })();
+        })()
 
         surveyQuery = () => {
             $.get('/api/survey')

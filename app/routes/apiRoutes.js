@@ -21,9 +21,9 @@ module.exports = app => {
         });
 
         const unparsedData = JSON.parse(parsedData);
-        console.log(unparsedData);
-        // friends.push(req.body);
+        console.log('data', unparsedData);
         friends.push(unparsedData);
+        res.json(true);
     });
 
     app.get('/api/survey', (req, res) => {
