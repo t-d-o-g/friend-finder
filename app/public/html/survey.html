@@ -152,6 +152,29 @@
                                         }
                                     }
 
+                                    // calculate final score
+                                    let scoreArr = [];
+                                    for (let i = 0; i < diffArr.length; i++) {
+                                        let score = 0;
+                                        for (let j = 0; j < diffArr[i].length; j++) {
+                                            score += diffArr[i][j];
+                                        }
+                                        scoreArr.push(score);
+                                    }
+                                    console.log('scoreArr', scoreArr);
+
+                                    // get lowest array number based on John Resing post
+                                    // https://stackoverflow.com/questions/8934877/obtain-smallest-value-from-array-in-javascript
+                                    // https://johnresig.com/blog/fast-javascript-maxmin/
+                                    Array.min = array => {
+                                        return Math.min.apply( Math, array );
+                                    };
+
+                                    let lowestVal = Array.min(scoreArr);
+                                    let friendMatchId = scoreArr.indexOf(lowestVal);
+
+                                    console.log('friend match id:', friendMatchId);
+
                                     $.post('/api/friends', friend, data => {
                                         // does not ever return
                                         console.log(data);
