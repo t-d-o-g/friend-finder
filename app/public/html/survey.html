@@ -47,7 +47,6 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                Your matched friend is...
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -92,6 +91,7 @@
                                 "conscientiousness": 0
                             }
 
+                            console.log('Survey data:')
                             for (let i = 0; i < 10; i++) {
                                 if ($(`input[name=radioGroup-${i}]:checked`).val()) {
                                     let input = $(`input[name=radioGroup-${i}]:checked`).val().split('_'); 
@@ -115,7 +115,7 @@
                                         img: $("#image").val().trim(),
                                         factors: factorScores 
                                     }
-                                    console.log('friend', friend);
+                                    console.log('new friend:', friend);
                                     // Compare newFriend Factor score to existingFriends scores
                                     let diff = 0;
                                     let existingFriendFactor = 0;
@@ -138,18 +138,8 @@
                                                 diff = currentFriendFactor - existingFriendFactor;
                                             }
                                             factorDiffs.push(diff);
-                                            console.log('diff', diff);
-                                            console.log('factorsDiff', factorDiffs);
-                                            for (var u = 0; u < factorDiffs.length; u++) {
-                                                console.log(`factor diffs ${u}: ${factorDiffs[u]}`);
-                                            }
                                         }
                                         diffArr.push(factorDiffs);
-                                        console.log('diffArr', diffArr);
-                                        console.log('diffArr length', diffArr.length);
-                                        for (var p = 0; p < diffArr.length; p++) {
-                                            console.log(`diff arr ${p}: ${diffArr[p]}`);
-                                        }
                                     }
 
                                     // calculate final score
@@ -161,7 +151,7 @@
                                         }
                                         scoreArr.push(score);
                                     }
-                                    console.log('scoreArr', scoreArr);
+                                    console.log('scoreArr:', scoreArr);
 
                                     // get lowest array number based on John Resing post
                                     // https://stackoverflow.com/questions/8934877/obtain-smallest-value-from-array-in-javascript
@@ -172,17 +162,29 @@
 
                                     let lowestVal = Array.min(scoreArr);
                                     let friendMatchId = scoreArr.indexOf(lowestVal);
-
                                     console.log('friend match id:', friendMatchId);
+
+                                    console.log('friend data:', friendData);
+                                    let friendName = friendData[friendMatchId].name;
+                                    let friendImg = friendData[friendMatchId].img;
+
+                                    // display modal after form submitted 
+                                    let modalText = $('<p>');
+                                    modalText.text(`Your friend match is ${friendName}`);
+                                    $('.modal-body').append(modalText);
+
+                                    let modalImg = $('<img>');
+                                    modalImg.attr({'src': `${friendImg}`, 'alt': 'friend-img'});
+                                    $('.modal-body').append(modalImg);
+
+                                    // $('.modal-body').text(`Your Friend match is ${friendMatchId}`);
+                                    $('#friend-modal').modal('show');
 
                                     $.post('/api/friends', friend, data => {
                                         // does not ever return
                                         console.log(data);
                                         return data;
                                     });
-
-                                    // display modal after form submitted 
-                                    $('#friend-modal').modal('show');
                                 })
                             }
                         form.classList.add('was-validated');

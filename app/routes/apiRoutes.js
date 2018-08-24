@@ -23,7 +23,7 @@ module.exports = app => {
         const unparsedData = JSON.parse(parsedData);
         console.log('data', unparsedData);
         friends.push(unparsedData);
-        res.json(true);
+        res.status(201).end();
     });
 
     app.get('/api/survey', (req, res) => {
